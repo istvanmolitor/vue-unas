@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { AdminLayout, DeleteButton, toastService } from '@admin'
+import { AdminLayout, DeleteButton, EditButton, toastService } from '@admin'
+import CreateButton from '@admin/components/ui/button/CreateButton.vue'
 import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
 import Select from '@admin/components/ui/Select.vue'
+import { useRouter } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import {
   unasService,
@@ -9,6 +11,7 @@ import {
   type UnasShop,
 } from '../services/unasService'
 
+const router = useRouter()
 const parameters = ref<UnasProductParameter[]>([])
 const shops = ref<UnasShop[]>([])
 const selectedShopId = ref<number | null>(null)
@@ -67,6 +70,10 @@ const deleteParameter = async (parameter: UnasProductParameter) => {
   }
 }
 
+const editParameter = (id: number) => {
+  router.push(`/admin/unas-parameters/${id}/edit`)
+}
+
 watch(selectedShopId, () => {
   fetchParameters({ page: 1 })
 })
@@ -99,7 +106,14 @@ onMounted(async () => {
       :pagination="pagination"
       @fetch="fetchParameters"
     >
+      <template #actions>
+        <CreateButton to="/admin/unas-parameters/create">
+          Új UNAS paraméter
+        </CreateButton>
+      </template>
+
       <template #row-actions="{ row }">
+        <EditButton @click="editParameter(row.id)" />
         <DeleteButton @confirm="deleteParameter(row)" />
       </template>
     </DataTable>

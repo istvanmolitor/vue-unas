@@ -79,6 +79,9 @@ export const unasService = {
   getShopOptions() {
     return api.get<{ warehouses: any[] }>('/api/unas/shops/options')
   },
+  getShop(id: string | number) {
+    return api.get<SingleResponse<UnasShop>>(`/api/unas/shops/${id}`)
+  },
   createShop(payload: Partial<UnasShop>) {
     return api.post<SingleResponse<UnasShop>>('/api/unas/shops', payload)
   },
@@ -93,8 +96,14 @@ export const unasService = {
   getProducts(params?: any) {
     return api.get<PaginatedResponse<UnasProduct>>('/api/unas/products', { params })
   },
-  getProduct(id: number) {
+  getProduct(id: string | number) {
     return api.get<SingleResponse<UnasProduct>>(`/api/unas/products/${id}`)
+  },
+  createProduct(payload: Partial<UnasProduct>) {
+    return api.post<SingleResponse<UnasProduct>>('/api/unas/products', payload)
+  },
+  updateProduct(id: string | number, payload: Partial<UnasProduct>) {
+    return api.put<SingleResponse<UnasProduct>>(`/api/unas/products/${id}`, payload)
   },
   deleteProduct(id: number) {
     return api.delete(`/api/unas/products/${id}`)
@@ -104,8 +113,14 @@ export const unasService = {
   getCategories(params?: any) {
     return api.get<PaginatedResponse<UnasProductCategory>>('/api/unas/categories', { params })
   },
-  getCategory(id: number) {
+  getCategory(id: string | number) {
     return api.get<SingleResponse<UnasProductCategory>>(`/api/unas/categories/${id}`)
+  },
+  createCategory(payload: Partial<UnasProductCategory>) {
+    return api.post<SingleResponse<UnasProductCategory>>('/api/unas/categories', payload)
+  },
+  updateCategory(id: string | number, payload: Partial<UnasProductCategory>) {
+    return api.put<SingleResponse<UnasProductCategory>>(`/api/unas/categories/${id}`, payload)
   },
   deleteCategory(id: number) {
     return api.delete(`/api/unas/categories/${id}`)
@@ -115,8 +130,14 @@ export const unasService = {
   getParameters(params?: any) {
     return api.get<PaginatedResponse<UnasProductParameter>>('/api/unas/parameters', { params })
   },
-  getParameter(id: number) {
+  getParameter(id: string | number) {
     return api.get<SingleResponse<UnasProductParameter>>(`/api/unas/parameters/${id}`)
+  },
+  createParameter(payload: Partial<UnasProductParameter>) {
+    return api.post<SingleResponse<UnasProductParameter>>('/api/unas/parameters', payload)
+  },
+  updateParameter(id: string | number, payload: Partial<UnasProductParameter>) {
+    return api.put<SingleResponse<UnasProductParameter>>(`/api/unas/parameters/${id}`, payload)
   },
   deleteParameter(id: number) {
     return api.delete(`/api/unas/parameters/${id}`)
