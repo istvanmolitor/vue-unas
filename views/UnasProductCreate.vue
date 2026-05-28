@@ -11,14 +11,22 @@ import Select from '@admin/components/ui/Select.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
 import { FormButtons } from '@admin'
 import { useRouter } from 'vue-router'
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import { unasService, type UnasShop } from '../services/unasService'
 
 const router = useRouter()
 const isSaving = ref(false)
-const isLoading = ref(false)
 const shops = ref<UnasShop[]>([])
 const errors = ref<Record<string, string[]>>({})
+
+const shopOptions = computed(() => {
+  return shops.value
+    .filter((shop) => typeof shop.id === 'number')
+    .map((shop) => ({
+      value: shop.id as number,
+      label: shop.name,
+    }))
+})
 
 const form = reactive({
   sku: '',
@@ -57,6 +65,11 @@ const handleSubmit = async () => {
   }
 }
 
+const handleShopChange = (value: string | number) => {
+  const parsedValue = typeof value === 'number' ? value : Number.parseInt(value, 10)
+  form.unas_shop_id = Number.isNaN(parsedValue) ? null : parsedValue
+}
+
 onMounted(() => {
   fetchShops()
 })
@@ -84,11 +97,10 @@ onMounted(() => {
             <Label for="unas_shop_id">Bolt *</Label>
             <Select
               id="unas_shop_id"
-              v-model="form.unas_shop_id"
-              :options="shops"
-              label-field="name"
-              value-field="id"
+              :model-value="form.unas_shop_id ?? ''"
+              :options="shopOptions"
               placeholder="Válassz boltot"
+              @update:model-value="handleShopChange"
             />
             <InputError :message="errors.unas_shop_id" />
           </div>
@@ -127,3 +139,5 @@ onMounted(() => {
     </Card>
   </AdminLayout>
 </template>
+
+

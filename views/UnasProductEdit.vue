@@ -9,6 +9,7 @@ import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
 import { FormButtons } from '@admin'
+import { ProductSelect } from '@product'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import { unasService } from '../services/unasService'
@@ -23,6 +24,7 @@ const form = reactive({
   sku: '',
   unas_shop_id: null as number | null,
   shop_name: '',
+  product_id: null as number | null,
   price: 0,
   stock: 0,
   changed: true,
@@ -38,6 +40,7 @@ const fetchProduct = async () => {
     form.sku = product.sku
     form.unas_shop_id = product.unas_shop_id
     form.shop_name = product.shop_name || ''
+    form.product_id = product.product_id ?? null
     form.price = product.price
     form.stock = product.stock
     form.changed = product.changed
@@ -57,6 +60,7 @@ const handleSubmit = async () => {
     errors.value = {}
     await unasService.updateProduct(id, {
       sku: form.sku,
+      product_id: form.product_id,
       price: form.price,
       stock: form.stock,
       changed: form.changed
@@ -120,6 +124,12 @@ onMounted(async () => {
           <div class="space-y-2">
             <Label for="remote_id">Remote ID (opcionális)</Label>
             <Input id="remote_id" v-model="form.remote_id" disabled />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="product_id">Kapcsolt termék (opcionális)</Label>
+            <ProductSelect id="product_id" v-model="form.product_id" placeholder="Válassz terméket" />
+            <InputError :message="errors.product_id" />
           </div>
 
           <div class="flex items-center space-x-2 pt-8">
