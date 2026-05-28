@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminLayout, EditButton, DeleteButton, toastService } from '@admin'
+import { AdminLayout, ShowButton, EditButton, DeleteButton, toastService } from '@admin'
 import CreateButton from '@admin/components/ui/button/CreateButton.vue'
 import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
 import { useRouter } from 'vue-router'
@@ -21,7 +21,6 @@ const pagination = ref<PaginationMeta>({
 })
 
 const columns: Column<UnasShop>[] = [
-  { key: 'id', label: 'ID', sortable: true, width: '80px' },
   { key: 'name', label: 'Név', sortable: true },
   { key: 'domain', label: 'Domain', sortable: true },
   { key: 'warehouse_name', label: 'Raktár', sortable: false },
@@ -42,8 +41,20 @@ const fetchShops = async (params: any = {}) => {
   }
 }
 
-const editShop = (id: number) => {
-  router.push(`/admin/unas-shops/${id}/edit`)
+const editShop = (id?: number) => {
+  if (!id) {
+    return
+  }
+
+  router.push({ name: 'admin-unas-shops-edit', params: { id } })
+}
+
+const showShop = (id?: number) => {
+  if (!id) {
+    return
+  }
+
+  router.push({ name: 'admin-unas-shops-show', params: { id } })
 }
 
 const deleteShop = async (shop: UnasShop) => {
@@ -83,6 +94,7 @@ onMounted(async () => {
         </span>
       </template>
       <template #row-actions="{ row }">
+        <ShowButton @click="showShop(row.id)" />
         <EditButton @click="editShop(row.id)" />
         <DeleteButton @confirm="deleteShop(row)" />
       </template>

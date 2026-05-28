@@ -20,6 +20,12 @@ const unasRoutes: RouteRecordRaw[] = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/admin/unas-shops/:id',
+    name: 'admin-unas-shops-show',
+    component: () => import('../views/UnasShopShow.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/admin/unas-products',
     name: 'admin-unas-products',
     component: () => import('../views/UnasProductIndex.vue'),

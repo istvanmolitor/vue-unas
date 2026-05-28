@@ -43,17 +43,28 @@ const fetchOptions = async () => {
 }
 
 const fetchShop = async () => {
-  const id = route.params.id as string
+  const id = Number(route.params.id)
+
+  if (!Number.isInteger(id) || id <= 0) {
+    toastService.error('Érvénytelen bolt azonosító.')
+    router.push('/admin/unas-shops')
+    return
+  }
+
   try {
     isLoading.value = true
     const { data } = await unasService.getShop(id)
-    const shop = data.data
+    const shop = (data as any)?.data ?? (data as any)
 
-    form.name = shop.name
-    form.domain = shop.domain
-    form.api_key = shop.api_key
-    form.enabled = shop.enabled
-    form.warehouse_id = shop.warehouse_id
+    if (!shop?.id) {
+      throw new Error('A bolt adatai nem érhetők el.')
+    }
+
+    form.name = shop.name ?? ''
+    form.domain = shop.domain ?? ''
+    form.api_key = shop.api_key ?? ''
+    form.enabled = Boolean(shop.enabled)
+    form.warehouse_id = shop.warehouse_id ?? null
   } catch (error) {
     console.error('Hiba a bolt betöltésekor:', error)
     toastService.error('Nem sikerült betölteni a bolt adatait.')
