@@ -4,6 +4,7 @@ export type {
   UnasProduct,
   UnasProductCategory,
   UnasProductParameter,
+  UnasOrder,
 } from './services/unasService'
 export { UnasMenuBuilder, unasMenuBuilder } from './config/menuBuilder'
 export { default as router } from './router/index'

@@ -70,6 +70,18 @@ export interface UnasProductParameter {
   created_at?: string
 }
 
+export interface UnasOrder {
+  id: number
+  unas_shop_id: number
+  shop_name?: string
+  order_id: number
+  order_code?: string
+  remote_id?: string
+  changed: boolean
+  created_at?: string
+  updated_at?: string
+}
+
 export interface PaginatedResponse<T> {
   data: T[]
   meta: {
@@ -168,5 +180,16 @@ export const unasService = {
   },
   deleteParameter(id: number) {
     return api.delete(`/api/unas/parameters/${id}`)
+  },
+
+  // Orders
+  getOrders(params?: any) {
+    return api.get<PaginatedResponse<UnasOrder>>('/api/unas/orders', { params })
+  },
+  getOrder(id: string | number) {
+    return api.get<SingleResponse<UnasOrder>>(`/api/unas/orders/${id}`)
+  },
+  deleteOrder(id: number) {
+    return api.delete(`/api/unas/orders/${id}`)
   },
 }

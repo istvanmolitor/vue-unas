@@ -1,5 +1,5 @@
 import { MenuBuilder, type MenuItemConfig } from '@menu/index'
-import { ShoppingBag, Store, Package, FolderTree, ListFilter } from 'lucide-vue-next'
+import { ShoppingBag, Store, Package, FolderTree, ListFilter, ClipboardList } from 'lucide-vue-next'
 
 export class UnasMenuBuilder extends MenuBuilder {
   build(menu: MenuItemConfig, menuName: string): MenuItemConfig {
@@ -40,6 +40,13 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-parameters',
           icon: ListFilter,
           order: 40,
+        },
+        {
+          id: 'unas-orders',
+          title: 'Megrendelések',
+          path: '/admin/unas-orders',
+          icon: ClipboardList,
+          order: 50,
         },
       ],
     }
