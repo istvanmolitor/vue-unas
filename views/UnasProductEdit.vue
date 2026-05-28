@@ -7,37 +7,27 @@ import CardContent from '@admin/components/ui/CardContent.vue'
 import CardFooter from '@admin/components/ui/CardFooter.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
-import Select from '@admin/components/ui/Select.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
 import { FormButtons } from '@admin'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
-import { unasService, type UnasShop } from '../services/unasService'
+import { unasService } from '../services/unasService'
 
 const router = useRouter()
 const route = useRoute()
 const isSaving = ref(false)
 const isLoading = ref(true)
-const shops = ref<UnasShop[]>([])
 const errors = ref<Record<string, string[]>>({})
 
 const form = reactive({
   sku: '',
   unas_shop_id: null as number | null,
+  shop_name: '',
   price: 0,
   stock: 0,
   changed: true,
   remote_id: ''
 })
-
-const fetchShops = async () => {
-  try {
-    const response = await unasService.getShops({ per_page: 100 })
-    shops.value = response.data.data
-  } catch (error) {
-    console.error('Hiba a boltok betöltésekor:', error)
-  }
-}
 
 const fetchProduct = async () => {
   const id = route.params.id as string
@@ -47,6 +37,7 @@ const fetchProduct = async () => {
     const product = data.data
     form.sku = product.sku
     form.unas_shop_id = product.unas_shop_id
+    form.shop_name = product.shop_name || ''
     form.price = product.price
     form.stock = product.stock
     form.changed = product.changed
@@ -64,7 +55,12 @@ const handleSubmit = async () => {
   try {
     isSaving.value = true
     errors.value = {}
-    await unasService.updateProduct(id, form as any)
+    await unasService.updateProduct(id, {
+      sku: form.sku,
+      price: form.price,
+      stock: form.stock,
+      changed: form.changed
+    })
     toastService.success('UNAS termék sikeresen frissítve!')
     router.push('/admin/unas-products')
   } catch (error: any) {
@@ -80,7 +76,6 @@ const handleSubmit = async () => {
 }
 
 onMounted(async () => {
-  await fetchShops()
   await fetchProduct()
 })
 </script>
@@ -107,15 +102,7 @@ onMounted(async () => {
 
           <div class="space-y-2">
             <Label for="unas_shop_id">Bolt *</Label>
-            <Select
-              id="unas_shop_id"
-              v-model="form.unas_shop_id"
-              :options="shops"
-              label-field="name"
-              value-field="id"
-              placeholder="Válassz boltot"
-            />
-            <InputError :message="errors.unas_shop_id" />
+            <Input id="unas_shop_id" :model-value="form.shop_name" disabled />
           </div>
 
           <div class="space-y-2">
@@ -132,8 +119,7 @@ onMounted(async () => {
 
           <div class="space-y-2">
             <Label for="remote_id">Remote ID (opcionális)</Label>
-            <Input id="remote_id" v-model="form.remote_id" />
-            <InputError :message="errors.remote_id" />
+            <Input id="remote_id" v-model="form.remote_id" disabled />
           </div>
 
           <div class="flex items-center space-x-2 pt-8">
