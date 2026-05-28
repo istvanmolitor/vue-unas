@@ -17,7 +17,7 @@ import { unasService, type UnasShop } from '../services/unasService'
 
 const router = useRouter()
 const isSaving = ref(false)
-const warehouses = ref<any[]>([])
+const warehouses = ref<{ value: number; label: string }[]>([])
 const errors = ref<Record<string, string[]>>({})
 
 const form = reactive<Partial<UnasShop>>({
@@ -31,7 +31,10 @@ const form = reactive<Partial<UnasShop>>({
 const fetchOptions = async () => {
   try {
     const response = await unasService.getShopOptions()
-    warehouses.value = response.data.warehouses
+    warehouses.value = response.data.warehouses.map((warehouse: { id: number; name: string }) => ({
+      value: warehouse.id,
+      label: warehouse.name,
+    }))
   } catch (error) {
     console.error('Hiba az opciók betöltése közben:', error)
   }
@@ -94,10 +97,9 @@ onMounted(() => {
             <Label for="warehouse_id">Raktár</Label>
             <Select
               id="warehouse_id"
-              v-model="form.warehouse_id"
+              v-model.number="form.warehouse_id"
               :options="warehouses"
-              label-field="name"
-              value-field="id"
+              required
               placeholder="Válassz raktárt..."
             />
             <InputError :message="errors.warehouse_id" />
