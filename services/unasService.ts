@@ -10,6 +10,9 @@ export interface UnasShop {
   api_key: string
   warehouse_id: number | null
   warehouse_name?: string
+  shop_products_count?: number
+  shop_product_categories_count?: number
+  shop_product_parameters_count?: number
   created_at?: string
   updated_at?: string
 }

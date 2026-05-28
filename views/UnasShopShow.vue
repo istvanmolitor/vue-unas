@@ -10,6 +10,7 @@ import {
   DeleteButton,
   EditButton,
   LoadingSpinner,
+  StatsCard,
   toastService,
 } from '@admin'
 import { computed, onMounted, ref } from 'vue'
@@ -110,56 +111,83 @@ onMounted(async () => {
       <LoadingSpinner label="Betöltés..." />
     </div>
 
-    <Card v-else-if="shop">
-      <CardHeader>
-        <CardTitle>{{ shop.name }}</CardTitle>
-        <CardDescription>UNAS bolt részletei</CardDescription>
-      </CardHeader>
+    <div v-else-if="shop" class="space-y-6">
+      <!-- Dashboard Statistics -->
+      <div class="grid gap-4 md:grid-cols-3">
+        <StatsCard
+          title="Termékek"
+          :value="shop.shop_products_count ?? 0"
+          icon="box"
+          color="blue"
+        />
 
-      <CardContent class="grid gap-4 md:grid-cols-2">
-        <div>
-          <p class="text-xs text-muted-foreground">ID</p>
-          <p class="font-medium">{{ shop.id }}</p>
-        </div>
+        <StatsCard
+          title="Kategóriák"
+          :value="shop.shop_product_categories_count ?? 0"
+          icon="folder"
+          color="purple"
+        />
 
-        <div>
-          <p class="text-xs text-muted-foreground">Aktív</p>
-          <p class="font-medium" :class="shop.enabled ? 'text-green-600' : 'text-red-600'">
-            {{ shop.enabled ? 'Igen' : 'Nem' }}
-          </p>
-        </div>
+        <StatsCard
+          title="Paraméterek"
+          :value="shop.shop_product_parameters_count ?? 0"
+          icon="settings"
+          color="orange"
+        />
+      </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground">Név</p>
-          <p class="font-medium">{{ shop.name }}</p>
-        </div>
+      <!-- Shop Details -->
+      <Card>
+        <CardHeader>
+          <CardTitle>{{ shop.name }}</CardTitle>
+          <CardDescription>UNAS bolt részletei</CardDescription>
+        </CardHeader>
 
-        <div>
-          <p class="text-xs text-muted-foreground">Domain</p>
-          <p class="font-medium">{{ shop.domain }}</p>
-        </div>
+        <CardContent class="grid gap-4 md:grid-cols-2">
+          <div>
+            <p class="text-xs text-muted-foreground">ID</p>
+            <p class="font-medium">{{ shop.id }}</p>
+          </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground">Raktár</p>
-          <p class="font-medium">{{ shop.warehouse_name || '-' }}</p>
-        </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Aktív</p>
+            <p class="font-medium" :class="shop.enabled ? 'text-green-600' : 'text-red-600'">
+              {{ shop.enabled ? 'Igen' : 'Nem' }}
+            </p>
+          </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground">API kulcs</p>
-          <p class="font-medium">{{ maskedApiKey }}</p>
-        </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Név</p>
+            <p class="font-medium">{{ shop.name }}</p>
+          </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground">Létrehozva</p>
-          <p class="font-medium">{{ formattedCreatedAt }}</p>
-        </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Domain</p>
+            <p class="font-medium">{{ shop.domain }}</p>
+          </div>
 
-        <div>
-          <p class="text-xs text-muted-foreground">Utoljára módosítva</p>
-          <p class="font-medium">{{ formattedUpdatedAt }}</p>
-        </div>
-      </CardContent>
-    </Card>
+          <div>
+            <p class="text-xs text-muted-foreground">Raktár</p>
+            <p class="font-medium">{{ shop.warehouse_name || '-' }}</p>
+          </div>
+
+          <div>
+            <p class="text-xs text-muted-foreground">API kulcs</p>
+            <p class="font-medium">{{ maskedApiKey }}</p>
+          </div>
+
+          <div>
+            <p class="text-xs text-muted-foreground">Létrehozva</p>
+            <p class="font-medium">{{ formattedCreatedAt }}</p>
+          </div>
+
+          <div>
+            <p class="text-xs text-muted-foreground">Utoljára módosítva</p>
+            <p class="font-medium">{{ formattedUpdatedAt }}</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   </AdminLayout>
 </template>
 
