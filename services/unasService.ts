@@ -28,6 +28,16 @@ export interface UnasProduct {
   created_at?: string
 }
 
+export interface UnasProductImage {
+  id: number
+  unas_product_id: number
+  image_url: string
+  is_main: boolean
+  sort: number
+  created_at?: string
+  updated_at?: string
+}
+
 export interface UnasProductCategory {
   id: number
   unas_shop_id: number
@@ -107,6 +117,20 @@ export const unasService = {
   },
   deleteProduct(id: number) {
     return api.delete(`/api/unas/products/${id}`)
+  },
+
+  // Product Images
+  getProductImages(productId: string | number) {
+    return api.get<{ data: UnasProductImage[] }>(`/api/unas/products/${productId}/images`)
+  },
+  createProductImage(productId: string | number, payload: Partial<UnasProductImage>) {
+    return api.post<{ data: UnasProductImage }>(`/api/unas/products/${productId}/images`, payload)
+  },
+  updateProductImage(productId: string | number, imageId: number, payload: Partial<UnasProductImage>) {
+    return api.put<{ data: UnasProductImage }>(`/api/unas/products/${productId}/images/${imageId}`, payload)
+  },
+  deleteProductImage(productId: string | number, imageId: number) {
+    return api.delete(`/api/unas/products/${productId}/images/${imageId}`)
   },
 
   // Categories
