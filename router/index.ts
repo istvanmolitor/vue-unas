@@ -85,6 +85,12 @@ const unasRoutes: RouteRecordRaw[] = [
     component: () => import('../views/UnasOrderIndex.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/admin/unas-orders/:id',
+    name: 'admin-unas-orders-show',
+    component: () => import('../views/UnasOrderShow.vue'),
+    meta: { requiresAuth: true }
+  },
 ]
 
 export default unasRoutes

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { AdminLayout, DeleteButton, toastService } from '@admin'
+import { AdminLayout, DeleteButton, ShowButton, toastService } from '@admin'
 import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
 import Select from '@admin/components/ui/Select.vue'
+import { useRouter } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import {
   unasService,
@@ -13,6 +14,7 @@ const orders = ref<UnasOrder[]>([])
 const shops = ref<UnasShop[]>([])
 const selectedShopId = ref<number | null>(null)
 const isLoading = ref(false)
+const router = useRouter()
 
 const pagination = ref<PaginationMeta>({
   current_page: 1,
@@ -67,6 +69,10 @@ const deleteOrder = async (order: UnasOrder) => {
   }
 }
 
+const showOrder = (id: number): void => {
+  router.push({ name: 'admin-unas-orders-show', params: { id } })
+}
+
 watch(selectedShopId, () => {
   fetchOrders({ page: 1 })
 })
@@ -100,6 +106,7 @@ onMounted(async () => {
       @fetch="fetchOrders"
     >
       <template #row-actions="{ row }">
+        <ShowButton @click="showOrder(row.id)" />
         <DeleteButton @confirm="deleteOrder(row)" />
       </template>
     </DataTable>
