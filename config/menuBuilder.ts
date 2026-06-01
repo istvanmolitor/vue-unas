@@ -12,6 +12,7 @@ export class UnasMenuBuilder extends MenuBuilder {
       title: 'UNAS',
       icon: ShoppingBag,
       order: 40,
+      permission: 'unas',
       children: [
         {
           id: 'unas-shops',
@@ -19,6 +20,7 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-shops',
           icon: Store,
           order: 10,
+          permission: 'unas',
         },
         {
           id: 'unas-products',
@@ -26,6 +28,7 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-products',
           icon: Package,
           order: 20,
+          permission: 'unas',
         },
         {
           id: 'unas-categories',
@@ -33,6 +36,7 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-categories',
           icon: FolderTree,
           order: 30,
+          permission: 'unas',
         },
         {
           id: 'unas-parameters',
@@ -40,6 +44,7 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-parameters',
           icon: ListFilter,
           order: 40,
+          permission: 'unas',
         },
         {
           id: 'unas-orders',
@@ -47,6 +52,7 @@ export class UnasMenuBuilder extends MenuBuilder {
           path: '/admin/unas-orders',
           icon: ClipboardList,
           order: 50,
+          permission: 'unas',
         },
       ],
     }
