@@ -105,7 +105,7 @@ onMounted(() => {
             <InputError :message="errors.warehouse_id" />
           </div>
           <div class="flex items-center gap-2 pt-2">
-            <Checkbox id="enabled" v-model:checked="form.enabled" />
+            <Checkbox id="enabled" v-model="form.enabled" />
             <Label for="enabled">Aktív</Label>
           </div>
         </div>
