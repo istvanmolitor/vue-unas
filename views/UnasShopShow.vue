@@ -113,7 +113,7 @@ onMounted(async () => {
 
     <div v-else-if="shop" class="space-y-6">
       <!-- Dashboard Statistics -->
-      <div class="grid gap-4 md:grid-cols-3">
+      <div class="grid gap-4 md:grid-cols-4">
         <StatsCard
           title="Termékek"
           :value="shop.shop_products_count ?? 0"
@@ -133,6 +133,13 @@ onMounted(async () => {
           :value="shop.shop_product_parameters_count ?? 0"
           icon="settings"
           color="orange"
+        />
+
+        <StatsCard
+          title="Rendelések"
+          :value="shop.shop_orders_count ?? 0"
+          icon="ShoppingCart"
+          color="green"
         />
       </div>
 

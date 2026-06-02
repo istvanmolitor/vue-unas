@@ -13,6 +13,7 @@ export interface UnasShop {
   shop_products_count?: number
   shop_product_categories_count?: number
   shop_product_parameters_count?: number
+  shop_orders_count?: number
   created_at?: string
   updated_at?: string
 }
