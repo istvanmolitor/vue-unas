@@ -2,6 +2,7 @@
 import { AdminLayout, DeleteButton, EditButton, toastService } from '@admin'
 import CreateButton from '@admin/components/ui/button/CreateButton.vue'
 import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
+import Icon from '@admin/components/ui/Icon.vue'
 import Select from '@admin/components/ui/Select.vue'
 import { useRouter } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
@@ -25,6 +26,7 @@ const pagination = ref<PaginationMeta>({
 })
 
 const columns: Column<UnasProduct>[] = [
+  { key: 'main_image_url', label: 'Kép', sortable: false, width: '80px' },
   { key: 'id', label: 'ID', sortable: true, width: '80px' },
   { key: 'sku', label: 'SKU', sortable: true },
   { key: 'product_title', label: 'Termék név', sortable: false },
@@ -106,6 +108,15 @@ onMounted(async () => {
       :pagination="pagination"
       @fetch="fetchProducts"
     >
+      <template #main_image_url="{ row }">
+        <div v-if="row.main_image_url" class="w-12 h-12 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
+          <img :src="row.main_image_url" :alt="row.product_title || row.sku" class="w-full h-full object-cover" />
+        </div>
+        <div v-else class="w-12 h-12 rounded bg-gray-50 flex items-center justify-center text-gray-300">
+          <Icon name="Image" :size="20" />
+        </div>
+      </template>
+
       <template #actions>
         <CreateButton to="/admin/unas-products/create">
           Új UNAS termék

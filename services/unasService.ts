@@ -25,6 +25,7 @@ export interface UnasProduct {
   shop_name?: string
   product_id: number | null
   product_title?: string
+  main_image_url?: string | null
   price: number
   stock: number
   remote_id?: string
