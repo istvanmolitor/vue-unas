@@ -21,10 +21,20 @@ export interface UnasShop {
 export interface UnasProduct {
   id: number
   sku: string
+  name?: string
+  description?: string | null
   unas_shop_id: number
   shop_name?: string
   product_id: number | null
+  product_unit_id?: number | null
+  product_unit_name?: string | null
+  product_unit_short_name?: string | null
   product_title?: string
+  translations?: Record<string, {
+    language_id?: number
+    name?: string
+    description?: string | null
+  }>
   main_image_url?: string | null
   price: number
   stock: number

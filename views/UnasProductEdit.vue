@@ -2,6 +2,7 @@
 import { AdminLayout, BackButton, toastService, InputError, LoadingSpinner } from '@admin'
 import Label from '@admin/components/ui/Label.vue'
 import Input from '@admin/components/ui/Input.vue'
+import Textarea from '@admin/components/ui/Textarea.vue'
 import Card from '@admin/components/ui/Card.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
 import CardFooter from '@admin/components/ui/CardFooter.vue'
@@ -12,13 +13,19 @@ import { FormButtons } from '@admin'
 import { ProductSelect } from '@product'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
+import { normalizeTranslations } from '@language'
+import TranslationRepeaterVue from '@language/components/TranslationRepeater.vue'
 import { unasService, type UnasProductImage } from '../services/unasService'
 import MediaFilePicker from '@media/components/MediaFilePicker.vue'
+import { productService, type ProductUnit } from '@product/services/productService'
+
+const TranslationRepeater = TranslationRepeaterVue as any
 
 const router = useRouter()
 const route = useRoute()
 const isSaving = ref(false)
 const isLoading = ref(true)
+const availableUnits = ref<ProductUnit[]>([])
 const errors = ref<Record<string, string[]>>({})
 
 const form = reactive({
@@ -26,10 +33,12 @@ const form = reactive({
   unas_shop_id: null as number | null,
   shop_name: '',
   product_id: null as number | null,
+  product_unit_id: null as number | null,
   price: 0,
   stock: 0,
   changed: true,
-  remote_id: ''
+  remote_id: '',
+  translations: {} as Record<number, { name: string, description: string }>
 })
 
 const images = ref<UnasProductImage[]>([])
@@ -48,10 +57,12 @@ const fetchProduct = async () => {
     form.unas_shop_id = product.unas_shop_id
     form.shop_name = product.shop_name || ''
     form.product_id = product.product_id ?? null
+    form.product_unit_id = product.product_unit_id ?? null
     form.price = product.price
     form.stock = product.stock
     form.changed = product.changed
     form.remote_id = product.remote_id || ''
+    form.translations = normalizeTranslations(product.translations, ['name', 'description'])
   } catch (error) {
     console.error('Hiba a termék betöltésekor:', error)
     router.push('/admin/unas-products')
@@ -70,6 +81,15 @@ const fetchImages = async () => {
   }
 }
 
+const fetchProductUnits = async () => {
+  try {
+    const response = await productService.getCreateData()
+    availableUnits.value = response.data.product_units
+  } catch (error) {
+    console.error('Hiba a mértékegységek betöltésekor:', error)
+  }
+}
+
 const handleSubmit = async () => {
   const id = route.params.id as string
   try {
@@ -78,9 +98,11 @@ const handleSubmit = async () => {
     await unasService.updateProduct(id, {
       sku: form.sku,
       product_id: form.product_id,
+      product_unit_id: form.product_unit_id,
       price: form.price,
       stock: form.stock,
-      changed: form.changed
+      changed: form.changed,
+      translations: form.translations
     })
     toastService.success('UNAS termék sikeresen frissítve!')
     router.push('/admin/unas-products')
@@ -150,8 +172,7 @@ const handleDeleteImage = async (image: UnasProductImage) => {
 }
 
 onMounted(async () => {
-  await fetchProduct()
-  await fetchImages()
+  await Promise.all([fetchProduct(), fetchImages(), fetchProductUnits()])
 })
 </script>
 
@@ -202,6 +223,45 @@ onMounted(async () => {
               <Label for="product_id">Kapcsolt termék (opcionális)</Label>
               <ProductSelect id="product_id" v-model="form.product_id" placeholder="Válassz terméket" />
               <InputError :message="errors.product_id" />
+            </div>
+
+            <div class="space-y-2">
+              <Label for="product_unit_id">Mértékegység</Label>
+              <select
+                id="product_unit_id"
+                v-model="form.product_unit_id"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option :value="null">Nincs kiválasztva</option>
+                <option v-for="unit in availableUnits" :key="unit.id" :value="unit.id">
+                  {{ unit.name }}
+                </option>
+              </select>
+              <InputError :message="errors.product_unit_id" />
+            </div>
+
+            <div class="space-y-4 md:col-span-2 border-t pt-4">
+              <h3 class="text-lg font-medium">Fordítások</h3>
+              <TranslationRepeater
+                v-model="form.translations"
+                :fields="['name', 'description']"
+              >
+                <template #default="{ language, translation }">
+                  <div class="space-y-4">
+                    <div class="space-y-2">
+                      <Label :for="`translation-name-${language.id}`">Név</Label>
+                      <Input :id="`translation-name-${language.id}`" v-model="translation.name" />
+                      <InputError :message="errors[`translations.${language.id}.name`]" />
+                    </div>
+
+                    <div class="space-y-2">
+                      <Label :for="`translation-description-${language.id}`">Leírás</Label>
+                      <Textarea :id="`translation-description-${language.id}`" v-model="translation.description" rows="4" />
+                      <InputError :message="errors[`translations.${language.id}.description`]" />
+                    </div>
+                  </div>
+                </template>
+              </TranslationRepeater>
             </div>
 
             <div class="flex items-center space-x-2 pt-8">

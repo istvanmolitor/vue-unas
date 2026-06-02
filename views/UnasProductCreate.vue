@@ -13,10 +13,12 @@ import { FormButtons } from '@admin'
 import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted, computed } from 'vue'
 import { unasService, type UnasShop } from '../services/unasService'
+import { productService, type ProductUnit } from '@product/services/productService'
 
 const router = useRouter()
 const isSaving = ref(false)
 const shops = ref<UnasShop[]>([])
+const availableUnits = ref<ProductUnit[]>([])
 const errors = ref<Record<string, string[]>>({})
 
 const shopOptions = computed(() => {
@@ -33,6 +35,7 @@ const form = reactive({
   unas_shop_id: null as number | null,
   price: 0,
   stock: 0,
+  product_unit_id: null as number | null,
   changed: true,
   remote_id: ''
 })
@@ -43,6 +46,15 @@ const fetchShops = async () => {
     shops.value = response.data.data
   } catch (error) {
     console.error('Hiba a boltok betöltésekor:', error)
+  }
+}
+
+const fetchProductUnits = async () => {
+  try {
+    const response = await productService.getCreateData()
+    availableUnits.value = response.data.product_units
+  } catch (error) {
+    console.error('Hiba a mértékegységek betöltésekor:', error)
   }
 }
 
@@ -72,6 +84,7 @@ const handleShopChange = (value: string | number) => {
 
 onMounted(() => {
   fetchShops()
+  fetchProductUnits()
 })
 </script>
 
@@ -115,6 +128,21 @@ onMounted(() => {
             <Label for="stock">Készlet *</Label>
             <Input id="stock" type="number" v-model.number="form.stock" />
             <InputError :message="errors.stock" />
+          </div>
+
+          <div class="space-y-2">
+            <Label for="product_unit_id">Mértékegység</Label>
+            <select
+              id="product_unit_id"
+              v-model="form.product_unit_id"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option :value="null">Nincs kiválasztva</option>
+              <option v-for="unit in availableUnits" :key="unit.id" :value="unit.id">
+                {{ unit.name }}
+              </option>
+            </select>
+            <InputError :message="errors.product_unit_id" />
           </div>
 
           <div class="space-y-2">
