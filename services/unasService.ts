@@ -27,6 +27,7 @@ export interface UnasProduct {
   shop_name?: string
   product_id: number | null
   product_unit_id?: number | null
+  unas_product_category_ids?: number[]
   product_unit_name?: string | null
   product_unit_short_name?: string | null
   product_title?: string

@@ -10,7 +10,7 @@ import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
 import { FormButtons } from '@admin'
-import { ProductSelect } from '@product'
+import { ProductCategorySelect, ProductSelect } from '@product'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import { normalizeTranslations } from '@language'
@@ -34,6 +34,7 @@ const form = reactive({
   shop_name: '',
   product_id: null as number | null,
   product_unit_id: null as number | null,
+  unas_product_category_ids: [] as number[],
   price: 0,
   stock: 0,
   changed: true,
@@ -58,6 +59,7 @@ const fetchProduct = async () => {
     form.shop_name = product.shop_name || ''
     form.product_id = product.product_id ?? null
     form.product_unit_id = product.product_unit_id ?? null
+    form.unas_product_category_ids = product.unas_product_category_ids ?? []
     form.price = product.price
     form.stock = product.stock
     form.changed = product.changed
@@ -90,6 +92,42 @@ const fetchProductUnits = async () => {
   }
 }
 
+const loadUnasCategories = async (search: string) => {
+  if (!form.unas_shop_id) {
+    return []
+  }
+
+  const categories: Array<{ id: number; parent_id: number | null; name: string }> = []
+  let page = 1
+  let lastPage = 1
+
+  do {
+    const response = await unasService.getCategories({
+      unas_shop_id: form.unas_shop_id,
+      search: search.trim().length > 0 ? search.trim() : undefined,
+      sort: 'name',
+      direction: 'asc',
+      page,
+      per_page: 100,
+    })
+
+    const rows = response.data.data
+      .filter((category) => Number.isInteger(category.id))
+      .map((category) => ({
+        id: category.id,
+        parent_id: category.parent_id,
+        name: String(category.name ?? category.title ?? '').trim() || `#${category.id}`,
+      }))
+
+    categories.push(...rows)
+
+    lastPage = response.data.meta?.last_page ?? 1
+    page += 1
+  } while (page <= lastPage)
+
+  return categories
+}
+
 const handleSubmit = async () => {
   const id = route.params.id as string
   try {
@@ -99,6 +137,7 @@ const handleSubmit = async () => {
       sku: form.sku,
       product_id: form.product_id,
       product_unit_id: form.product_unit_id,
+      unas_product_category_ids: form.unas_product_category_ids,
       price: form.price,
       stock: form.stock,
       changed: form.changed,
@@ -238,6 +277,18 @@ onMounted(async () => {
                 </option>
               </select>
               <InputError :message="errors.product_unit_id" />
+            </div>
+
+            <div class="space-y-2 md:col-span-2">
+              <Label for="unas_product_category_ids">UNAS kategóriák</Label>
+              <ProductCategorySelect
+                id="unas_product_category_ids"
+                v-model="form.unas_product_category_ids"
+                modal-title="UNAS kategóriák kiválasztása"
+                placeholder="Válassz UNAS kategóriákat"
+                :load-categories="loadUnasCategories"
+              />
+              <InputError :message="errors.unas_product_category_ids" />
             </div>
 
             <div class="space-y-4 md:col-span-2 border-t pt-4">
