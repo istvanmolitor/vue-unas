@@ -2,6 +2,7 @@
 import {
   AdminLayout,
   BackButton,
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -9,6 +10,7 @@ import {
   CardTitle,
   DeleteButton,
   EditButton,
+  Icon,
   LoadingSpinner,
   StatsCard,
   toastService,
@@ -91,6 +93,14 @@ const editShop = (): void => {
   router.push({ name: 'admin-unas-shops-edit', params: { id: shop.value.id } })
 }
 
+const openActions = (): void => {
+  if (!shop.value?.id) {
+    return
+  }
+
+  router.push({ name: 'admin-unas-shops-actions', params: { id: shop.value.id } })
+}
+
 onMounted(async () => {
   await fetchShop()
 })
@@ -102,6 +112,10 @@ onMounted(async () => {
       <BackButton to="/admin/unas-shops" />
 
       <div class="flex items-center gap-2" v-if="shop">
+        <Button variant="outline" @click="openActions">
+          <Icon name="settings" class="mr-2 h-4 w-4" />
+          Műveletek
+        </Button>
         <EditButton @click="editShop" />
         <DeleteButton @confirm="deleteShop" />
       </div>

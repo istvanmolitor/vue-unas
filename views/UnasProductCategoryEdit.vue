@@ -10,6 +10,7 @@ import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import Select from '@admin/components/ui/Select.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
+import UnasProductCategorySelect from '@unas/components/UnasProductCategorySelect.vue'
 import { FormButtons } from '@admin'
 import { useRouter, useRoute } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
@@ -134,14 +135,11 @@ onMounted(async () => {
 
           <div class="space-y-2">
             <Label for="parent_id">Szülő kategória</Label>
-            <Select
+            <UnasProductCategorySelect
               id="parent_id"
               v-model="form.parent_id"
-              :options="categories.filter(c => c.id !== Number(route.params.id))"
-              label-field="name"
-              value-field="id"
-              placeholder="Válassz szülő kategóriát"
-              clearable
+              :categories="categories"
+              :exclude-id="Number(route.params.id)"
             />
             <InputError :message="errors.parent_id" />
           </div>

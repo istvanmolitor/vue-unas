@@ -109,6 +109,10 @@ export interface SingleResponse<T> {
   data: T
 }
 
+export interface ActionResponse {
+  message: string
+}
+
 export const unasService = {
   // Shops
   getShops(params?: any) {
@@ -128,6 +132,30 @@ export const unasService = {
   },
   deleteShop(id: number) {
     return api.delete(`/api/unas/shops/${id}`)
+  },
+  downloadShopProducts(id: string | number) {
+    return api.post<ActionResponse>(`/api/unas/shops/${id}/actions/download-products`)
+  },
+  downloadShopCategories(id: string | number) {
+    return api.post<ActionResponse>(`/api/unas/shops/${id}/actions/download-categories`)
+  },
+  downloadShopParameters(id: string | number) {
+    return api.post<ActionResponse>(`/api/unas/shops/${id}/actions/download-parameters`)
+  },
+  downloadShopOrders(id: string | number) {
+    return api.post<ActionResponse>(`/api/unas/shops/${id}/actions/download-orders`)
+  },
+  clearShopProducts(id: string | number) {
+    return api.delete<ActionResponse>(`/api/unas/shops/${id}/actions/clear-products`)
+  },
+  clearShopCategories(id: string | number) {
+    return api.delete<ActionResponse>(`/api/unas/shops/${id}/actions/clear-categories`)
+  },
+  clearShopParameters(id: string | number) {
+    return api.delete<ActionResponse>(`/api/unas/shops/${id}/actions/clear-parameters`)
+  },
+  clearShopOrders(id: string | number) {
+    return api.delete<ActionResponse>(`/api/unas/shops/${id}/actions/clear-orders`)
   },
 
   // Products
