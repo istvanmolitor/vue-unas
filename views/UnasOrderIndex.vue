@@ -24,13 +24,24 @@ const pagination = ref<PaginationMeta>({
 })
 
 const columns: Column<UnasOrder>[] = [
-  { key: 'id', label: 'ID', sortable: true, width: '80px' },
-  { key: 'order_code', label: 'Rendelés kód', sortable: false },
   { key: 'shop_name', label: 'Bolt', sortable: false },
-  { key: 'remote_id', label: 'UNAS azonosító', sortable: true },
-  { key: 'changed', label: 'Változott', sortable: true },
+  { key: 'order_code', label: 'Rendelés kód', sortable: false },
   { key: 'created_at', label: 'Létrehozva', sortable: true },
 ]
+
+const formatDateTime = (value?: string | null): string => {
+  if (!value) {
+    return '-'
+  }
+
+  const match = value.match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}:\d{2})/)
+
+  if (match) {
+    return `${match[1]} ${match[2]}`
+  }
+
+  return value.replace('T', ' ').slice(0, 19)
+}
 
 const fetchOrders = async (params: any = {}) => {
   try {
@@ -105,6 +116,10 @@ onMounted(async () => {
       :pagination="pagination"
       @fetch="fetchOrders"
     >
+      <template #cell-created_at="{ row }">
+        {{ formatDateTime(row.created_at) }}
+      </template>
+
       <template #row-actions="{ row }">
         <ShowButton @click="showOrder(row.id)" />
         <DeleteButton @confirm="deleteOrder(row)" />
