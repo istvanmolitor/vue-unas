@@ -25,7 +25,6 @@ const pagination = ref<PaginationMeta>({
 })
 
 const columns: Column<UnasProductParameter>[] = [
-  { key: 'id', label: 'ID', sortable: true, width: '80px' },
   { key: 'name', label: 'Név', sortable: true },
   { key: 'type', label: 'Típus', sortable: true },
   { key: 'language_name', label: 'Nyelv', sortable: false },
