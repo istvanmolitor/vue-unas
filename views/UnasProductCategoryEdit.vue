@@ -169,12 +169,12 @@ onMounted(async () => {
           </div>
 
           <div class="flex items-center space-x-2">
-            <Checkbox id="display_page" v-model:checked="form.display_page" />
+            <Checkbox id="display_page" v-model="form.display_page" />
             <Label for="display_page">Megjelenítés az oldalon</Label>
           </div>
 
           <div class="flex items-center space-x-2">
-            <Checkbox id="display_menu" v-model:checked="form.display_menu" />
+            <Checkbox id="display_menu" v-model="form.display_menu" />
             <Label for="display_menu">Megjelenítés a menüben</Label>
           </div>
 
@@ -185,7 +185,7 @@ onMounted(async () => {
           </div>
 
           <div class="flex items-center space-x-2">
-            <Checkbox id="changed" v-model:checked="form.changed" />
+            <Checkbox id="changed" v-model="form.changed" />
             <Label for="changed">Módosult (szinkronizálandó)</Label>
           </div>
         </div>

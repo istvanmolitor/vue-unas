@@ -126,7 +126,7 @@ onMounted(() => {
           </div>
 
           <div class="flex items-center space-x-2 pt-8">
-            <Checkbox id="changed" v-model:checked="form.changed" />
+            <Checkbox id="changed" v-model="form.changed" />
             <Label for="changed">Módosult (szinkronizálandó)</Label>
           </div>
         </div>

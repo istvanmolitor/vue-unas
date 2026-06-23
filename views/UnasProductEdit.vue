@@ -316,7 +316,7 @@ onMounted(async () => {
             </div>
 
             <div class="flex items-center space-x-2 pt-8">
-              <Checkbox id="changed" v-model:checked="form.changed" />
+              <Checkbox id="changed" v-model="form.changed" />
               <Label for="changed">Módosult (szinkronizálandó)</Label>
             </div>
           </div>
@@ -385,7 +385,7 @@ onMounted(async () => {
             <InputError :message="imageErrors.image_url" />
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <Checkbox id="new_image_is_main" v-model:checked="newImageIsMain" />
+                <Checkbox id="new_image_is_main" v-model="newImageIsMain" />
                 <Label for="new_image_is_main" class="text-sm">Főkép</Label>
               </div>
               <button
