@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AdminLayout, BackButton, toastService, InputError } from '@admin'
+import InputField from '@admin/components/ui/InputField.vue'
 import Label from '@admin/components/ui/Label.vue'
 import Input from '@admin/components/ui/Input.vue'
 import Card from '@admin/components/ui/Card.vue'
@@ -95,11 +96,7 @@ onMounted(() => {
             <InputError :message="errors.unas_shop_id" />
           </div>
 
-          <div class="space-y-2">
-            <Label for="name">Név *</Label>
-            <Input id="name" v-model="form.name" />
-            <InputError :message="errors.name" />
-          </div>
+          <InputField id="name" label="Név" v-model="form.name" :required="true" :errors="errors.name" />
 
           <div class="space-y-2">
             <Label for="type">Típus *</Label>
@@ -113,17 +110,9 @@ onMounted(() => {
             <InputError :message="errors.type" />
           </div>
 
-          <div class="space-y-2">
-            <Label for="order">Sorrend *</Label>
-            <Input id="order" type="number" v-model.number="form.order" />
-            <InputError :message="errors.order" />
-          </div>
+          <InputField id="order" label="Sorrend" v-model.number="form.order" :type="'number'" :required="true" :errors="errors.order" />
 
-          <div class="space-y-2">
-            <Label for="remote_id">Remote ID (opcionális)</Label>
-            <Input id="remote_id" v-model="form.remote_id" />
-            <InputError :message="errors.remote_id" />
-          </div>
+          <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" :errors="errors.remote_id" />
 
           <div class="flex items-center space-x-2 pt-8">
             <Checkbox id="changed" v-model="form.changed" />

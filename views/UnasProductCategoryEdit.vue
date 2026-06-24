@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AdminLayout, BackButton, toastService, InputError, LoadingSpinner } from '@admin'
+import InputField from '@admin/components/ui/InputField.vue'
 import Label from '@admin/components/ui/Label.vue'
 import Input from '@admin/components/ui/Input.vue'
 import Textarea from '@admin/components/ui/Textarea.vue'
@@ -144,22 +145,12 @@ onMounted(async () => {
             <InputError :message="errors.parent_id" />
           </div>
 
-          <div class="space-y-2">
-            <Label for="name">Név *</Label>
-            <Input id="name" v-model="form.name" />
-            <InputError :message="errors.name" />
-          </div>
+          <InputField id="name" label="Név" v-model="form.name" :required="true" :errors="errors.name" />
 
-          <div class="space-y-2">
-            <Label for="title">Cím *</Label>
-            <Input id="title" v-model="form.title" />
-            <InputError :message="errors.title" />
-          </div>
+          <InputField id="title" label="Cím" v-model="form.title" :required="true" :errors="errors.title" />
 
-          <div class="space-y-2 md:col-span-2">
-            <Label for="keywords">Kulcsszavak</Label>
-            <Input id="keywords" v-model="form.keywords" />
-            <InputError :message="errors.keywords" />
+          <div class="md:col-span-2">
+            <InputField id="keywords" label="Kulcsszavak" v-model="form.keywords" :errors="errors.keywords" />
           </div>
 
           <div class="space-y-2 md:col-span-2">
@@ -178,11 +169,7 @@ onMounted(async () => {
             <Label for="display_menu">Megjelenítés a menüben</Label>
           </div>
 
-          <div class="space-y-2">
-            <Label for="remote_id">Remote ID (opcionális)</Label>
-            <Input id="remote_id" v-model="form.remote_id" />
-            <InputError :message="errors.remote_id" />
-          </div>
+          <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" :errors="errors.remote_id" />
 
           <div class="flex items-center space-x-2">
             <Checkbox id="changed" v-model="form.changed" />

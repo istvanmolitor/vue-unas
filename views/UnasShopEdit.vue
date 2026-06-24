@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { AdminLayout, BackButton, toastService, InputError, LoadingSpinner } from '@admin'
-import Label from '@admin/components/ui/Label.vue'
-import Input from '@admin/components/ui/Input.vue'
+import InputField from '@admin/components/ui/InputField.vue'
 import Checkbox from '@admin/components/ui/Checkbox.vue'
 import Card from '@admin/components/ui/Card.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
@@ -116,21 +115,9 @@ onMounted(async () => {
       </CardHeader>
       <CardContent class="space-y-4">
         <div class="grid gap-4 md:grid-cols-2">
-          <div class="space-y-2">
-            <Label for="name">Név *</Label>
-            <Input id="name" v-model="form.name" placeholder="Bolt neve" />
-            <InputError :message="errors.name" />
-          </div>
-          <div class="space-y-2">
-            <Label for="domain">Domain *</Label>
-            <Input id="domain" v-model="form.domain" placeholder="example.unas.hu" />
-            <InputError :message="errors.domain" />
-          </div>
-          <div class="space-y-2">
-            <Label for="api_key">API Kulcs *</Label>
-            <Input id="api_key" v-model="form.api_key" type="password" placeholder="API kulcs (hagyd üresen, ha nem változik)" />
-            <InputError :message="errors.api_key" />
-          </div>
+          <InputField id="name" label="Név" v-model="form.name" placeholder="Bolt neve" :required="true" :errors="errors.name" />
+          <InputField id="domain" label="Domain" v-model="form.domain" placeholder="example.unas.hu" :required="true" :errors="errors.domain" />
+          <InputField id="api_key" label="API Kulcs" v-model="form.api_key" :type="'password'" placeholder="API kulcs (hagyd üresen, ha nem változik)" :required="true" :errors="errors.api_key" />
           <div class="space-y-2">
             <Label for="warehouse_id">Raktár</Label>
             <Select

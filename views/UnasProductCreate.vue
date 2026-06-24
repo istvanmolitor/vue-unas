@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AdminLayout, BackButton, toastService, InputError } from '@admin'
+import InputField from '@admin/components/ui/InputField.vue'
 import Label from '@admin/components/ui/Label.vue'
 import Input from '@admin/components/ui/Input.vue'
 import Card from '@admin/components/ui/Card.vue'
@@ -100,11 +101,7 @@ onMounted(() => {
       </CardHeader>
       <CardContent class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <Label for="sku">SKU *</Label>
-            <Input id="sku" v-model="form.sku" />
-            <InputError :message="errors.sku" />
-          </div>
+          <InputField id="sku" label="SKU" v-model="form.sku" :required="true" :errors="errors.sku" />
 
           <div class="space-y-2">
             <Label for="unas_shop_id">Bolt *</Label>
@@ -118,17 +115,9 @@ onMounted(() => {
             <InputError :message="errors.unas_shop_id" />
           </div>
 
-          <div class="space-y-2">
-            <Label for="price">Ár *</Label>
-            <Input id="price" type="number" v-model.number="form.price" />
-            <InputError :message="errors.price" />
-          </div>
+          <InputField id="price" label="Ár" v-model.number="form.price" :type="'number'" :required="true" :errors="errors.price" />
 
-          <div class="space-y-2">
-            <Label for="stock">Készlet *</Label>
-            <Input id="stock" type="number" v-model.number="form.stock" />
-            <InputError :message="errors.stock" />
-          </div>
+          <InputField id="stock" label="Készlet" v-model.number="form.stock" :type="'number'" :required="true" :errors="errors.stock" />
 
           <div class="space-y-2">
             <Label for="product_unit_id">Mértékegység</Label>
@@ -145,11 +134,7 @@ onMounted(() => {
             <InputError :message="errors.product_unit_id" />
           </div>
 
-          <div class="space-y-2">
-            <Label for="remote_id">Remote ID (opcionális)</Label>
-            <Input id="remote_id" v-model="form.remote_id" />
-            <InputError :message="errors.remote_id" />
-          </div>
+          <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" :errors="errors.remote_id" />
 
           <div class="flex items-center space-x-2 pt-8">
             <Checkbox id="changed" v-model="form.changed" />
