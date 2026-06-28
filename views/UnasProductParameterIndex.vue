@@ -24,13 +24,7 @@ const pagination = ref<PaginationMeta>({
   total: 0,
 })
 
-const columns: Column<UnasProductParameter>[] = [
-  { key: 'name', label: 'Név', sortable: true },
-  { key: 'type', label: 'Típus', sortable: true },
-  { key: 'language_name', label: 'Nyelv', sortable: false },
-  { key: 'shop_name', label: 'Bolt', sortable: false },
-  { key: 'remote_id', label: 'Remote ID', sortable: false },
-]
+const columns = ref<Column[]>([])
 
 const fetchParameters = async (params: any = {}) => {
   try {
@@ -42,6 +36,7 @@ const fetchParameters = async (params: any = {}) => {
     const response = await unasService.getParameters(fetchParams)
     parameters.value = response.data.data
     pagination.value = response.data.meta
+    columns.value = (response.data.columns ?? []) as Column[]
   } catch (error) {
     console.error('Hiba a paraméterek betöltése közben:', error)
     toastService.error('Nem sikerült betölteni a paramétereket.')

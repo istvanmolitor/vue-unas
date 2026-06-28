@@ -20,12 +20,7 @@ const pagination = ref<PaginationMeta>({
   total: 0,
 })
 
-const columns: Column<UnasShop>[] = [
-  { key: 'name', label: 'Név', sortable: true },
-  { key: 'domain', label: 'Domain', sortable: true },
-  { key: 'warehouse_name', label: 'Raktár', sortable: false },
-  { key: 'enabled', label: 'Aktív', sortable: true, width: '100px' },
-]
+const columns = ref<Column[]>([])
 
 const fetchShops = async (params: any = {}) => {
   try {
@@ -33,6 +28,7 @@ const fetchShops = async (params: any = {}) => {
     const response = await unasService.getShops(params)
     shops.value = response.data.data
     pagination.value = response.data.meta
+    columns.value = (response.data.columns ?? []) as Column[]
   } catch (error) {
     console.error('Hiba a boltok betöltése közben:', error)
     toastService.error('Nem sikerült betölteni a boltokat.')

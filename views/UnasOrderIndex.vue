@@ -23,11 +23,7 @@ const pagination = ref<PaginationMeta>({
   total: 0,
 })
 
-const columns: Column<UnasOrder>[] = [
-  { key: 'shop_name', label: 'Bolt', sortable: false },
-  { key: 'order_code', label: 'Rendelés kód', sortable: false },
-  { key: 'created_at', label: 'Létrehozva', sortable: true },
-]
+const columns = ref<Column[]>([])
 
 const formatDateTime = (value?: string | null): string => {
   if (!value) {
@@ -53,6 +49,7 @@ const fetchOrders = async (params: any = {}) => {
     const response = await unasService.getOrders(fetchParams)
     orders.value = response.data.data
     pagination.value = response.data.meta
+    columns.value = (response.data.columns ?? []) as Column[]
   } catch (error) {
     console.error('Hiba a megrendelések betöltése közben:', error)
     toastService.error('Nem sikerült betölteni a megrendeléseket.')
