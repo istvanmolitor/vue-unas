@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { AdminLayout, DeleteButton, EditButton, toastService } from '@admin'
 import CreateButton from '@admin/components/ui/button/CreateButton.vue'
-import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
+import DataTable from '@admin/components/ui/dataTable/DataTable.vue'
 import Select from '@admin/components/ui/Select.vue'
 import { useRouter } from 'vue-router'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   unasService,
   type UnasProductParameter,
@@ -12,38 +12,9 @@ import {
 } from '../services/unasService'
 
 const router = useRouter()
-const parameters = ref<UnasProductParameter[]>([])
+const table = ref()
 const shops = ref<UnasShop[]>([])
 const selectedShopId = ref<number | null>(null)
-const isLoading = ref(false)
-
-const pagination = ref<PaginationMeta>({
-  current_page: 1,
-  last_page: 1,
-  per_page: 10,
-  total: 0,
-})
-
-const columns = ref<Column[]>([])
-
-const fetchParameters = async (params: any = {}) => {
-  try {
-    isLoading.value = true
-    const fetchParams = { ...params }
-    if (selectedShopId.value) {
-      fetchParams.unas_shop_id = selectedShopId.value
-    }
-    const response = await unasService.getParameters(fetchParams)
-    parameters.value = response.data.data
-    pagination.value = response.data.meta
-    columns.value = (response.data.columns ?? []) as Column[]
-  } catch (error) {
-    console.error('Hiba a paraméterek betöltése közben:', error)
-    toastService.error('Nem sikerült betölteni a paramétereket.')
-  } finally {
-    isLoading.value = false
-  }
-}
 
 const fetchShops = async () => {
   try {
@@ -58,7 +29,7 @@ const deleteParameter = async (parameter: UnasProductParameter) => {
   try {
     await unasService.deleteParameter(parameter.id)
     toastService.success('Paraméter törölve.')
-    await fetchParameters()
+    table.value?.refresh()
   } catch (error) {
     toastService.error('A törlés sikertelen.')
   }
@@ -68,13 +39,8 @@ const editParameter = (id: number) => {
   router.push(`/admin/unas-parameters/${id}/edit`)
 }
 
-watch(selectedShopId, () => {
-  fetchParameters({ page: 1 })
-})
-
 onMounted(async () => {
   await fetchShops()
-  await fetchParameters()
 })
 </script>
 
@@ -94,11 +60,9 @@ onMounted(async () => {
     </div>
 
     <DataTable
-      :columns="columns"
-      :data="parameters"
-      :loading="isLoading"
-      :pagination="pagination"
-      @fetch="fetchParameters"
+      ref="table"
+      url="/api/unas/parameters"
+      :extra-params="selectedShopId ? { unas_shop_id: selectedShopId } : {}"
     >
       <template #actions>
         <CreateButton to="/admin/unas-parameters/create">
@@ -107,8 +71,8 @@ onMounted(async () => {
       </template>
 
       <template #row-actions="{ row }">
-        <EditButton @click="editParameter(row.id)" />
-        <DeleteButton @confirm="deleteParameter(row)" />
+        <EditButton @click="editParameter((row as any).id)" />
+        <DeleteButton @confirm="deleteParameter(row as UnasProductParameter)" />
       </template>
     </DataTable>
   </AdminLayout>

@@ -1,41 +1,16 @@
 <script setup lang="ts">
 import { AdminLayout, ShowButton, EditButton, DeleteButton, toastService } from '@admin'
 import CreateButton from '@admin/components/ui/button/CreateButton.vue'
-import DataTable, { type Column, type PaginationMeta } from '@admin/components/ui/dataTable/DataTable.vue'
+import DataTable from '@admin/components/ui/dataTable/DataTable.vue'
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import {
   unasService,
   type UnasShop,
 } from '../services/unasService'
 
 const router = useRouter()
-const shops = ref<UnasShop[]>([])
-const isLoading = ref(false)
-
-const pagination = ref<PaginationMeta>({
-  current_page: 1,
-  last_page: 1,
-  per_page: 10,
-  total: 0,
-})
-
-const columns = ref<Column[]>([])
-
-const fetchShops = async (params: any = {}) => {
-  try {
-    isLoading.value = true
-    const response = await unasService.getShops(params)
-    shops.value = response.data.data
-    pagination.value = response.data.meta
-    columns.value = (response.data.columns ?? []) as Column[]
-  } catch (error) {
-    console.error('Hiba a boltok betöltése közben:', error)
-    toastService.error('Nem sikerült betölteni a boltokat.')
-  } finally {
-    isLoading.value = false
-  }
-}
+const table = ref()
 
 const editShop = (id?: number) => {
   if (!id) {
@@ -58,25 +33,18 @@ const deleteShop = async (shop: UnasShop) => {
   try {
     await unasService.deleteShop(shop.id)
     toastService.success('Bolt törölve.')
-    await fetchShops()
+    table.value?.refresh()
   } catch (error) {
     toastService.error('A törlés sikertelen.')
   }
 }
-
-onMounted(async () => {
-  await fetchShops()
-})
 </script>
 
 <template>
   <AdminLayout pageTitle="UNAS Boltok">
     <DataTable
-      :columns="columns"
-      :data="shops"
-      :loading="isLoading"
-      :pagination="pagination"
-      @fetch="fetchShops"
+      ref="table"
+      url="/api/unas/shops"
     >
       <template #actions>
         <CreateButton to="/admin/unas-shops/create">
@@ -85,14 +53,14 @@ onMounted(async () => {
       </template>
 
       <template #enabled="{ row }">
-        <span :class="row.enabled ? 'text-green-600' : 'text-red-600'">
-          {{ row.enabled ? 'Igen' : 'Nem' }}
+        <span :class="(row as any).enabled ? 'text-green-600' : 'text-red-600'">
+          {{ (row as any).enabled ? 'Igen' : 'Nem' }}
         </span>
       </template>
       <template #row-actions="{ row }">
-        <ShowButton @click="showShop(row.id)" />
-        <EditButton @click="editShop(row.id)" />
-        <DeleteButton @confirm="deleteShop(row)" />
+        <ShowButton @click="showShop((row as any).id)" />
+        <EditButton @click="editShop((row as any).id)" />
+        <DeleteButton @confirm="deleteShop(row as UnasShop)" />
       </template>
     </DataTable>
   </AdminLayout>
