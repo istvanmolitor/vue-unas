@@ -10,7 +10,7 @@ import CardFooter from '@admin/components/ui/CardFooter.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import Select from '@admin/components/ui/Select.vue'
-import Checkbox from '@admin/components/ui/Checkbox.vue'
+import CheckboxField from '@admin/components/ui/CheckboxField.vue'
 import UnasProductCategorySelect from '@unas/components/UnasProductCategorySelect.vue'
 import { FormButtons } from '@admin'
 import { useRouter, useRoute } from 'vue-router'
@@ -159,22 +159,13 @@ onMounted(async () => {
             <InputError :message="errors.description" />
           </div>
 
-          <div class="flex items-center space-x-2">
-            <Checkbox id="display_page" v-model="form.display_page" />
-            <Label for="display_page">Megjelenítés az oldalon</Label>
-          </div>
+          <CheckboxField id="display_page" label="Megjelenítés az oldalon" v-model="form.display_page" />
 
-          <div class="flex items-center space-x-2">
-            <Checkbox id="display_menu" v-model="form.display_menu" />
-            <Label for="display_menu">Megjelenítés a menüben</Label>
-          </div>
+          <CheckboxField id="display_menu" label="Megjelenítés a menüben" v-model="form.display_menu" />
 
           <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" :errors="errors.remote_id" />
 
-          <div class="flex items-center space-x-2">
-            <Checkbox id="changed" v-model="form.changed" />
-            <Label for="changed">Módosult (szinkronizálandó)</Label>
-          </div>
+          <CheckboxField id="changed" label="Módosult (szinkronizálandó)" v-model="form.changed" />
         </div>
       </CardContent>
       <CardFooter>

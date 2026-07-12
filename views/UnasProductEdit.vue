@@ -8,7 +8,7 @@ import CardContent from '@admin/components/ui/CardContent.vue'
 import CardFooter from '@admin/components/ui/CardFooter.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
-import Checkbox from '@admin/components/ui/Checkbox.vue'
+import CheckboxField from '@admin/components/ui/CheckboxField.vue'
 import { FormButtons } from '@admin'
 import { ProductCategorySelect, ProductSelect } from '@product'
 import { useRouter, useRoute } from 'vue-router'
@@ -295,9 +295,8 @@ onMounted(async () => {
               </div>
             </TranslationRepeater>
 
-            <div class="flex items-center space-x-2 pt-8">
-              <Checkbox id="changed" v-model="form.changed" />
-              <Label for="changed">Módosult (szinkronizálandó)</Label>
+            <div class="pt-8">
+              <CheckboxField id="changed" label="Módosult (szinkronizálandó)" v-model="form.changed" />
             </div>
           </div>
         </CardContent>
@@ -364,10 +363,7 @@ onMounted(async () => {
             />
             <InputError :message="imageErrors.image_url" />
             <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <Checkbox id="new_image_is_main" v-model="newImageIsMain" />
-                <Label for="new_image_is_main" class="text-sm">Főkép</Label>
-              </div>
+              <CheckboxField id="new_image_is_main" label="Főkép" v-model="newImageIsMain" />
               <button
                 type="button"
                 class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"

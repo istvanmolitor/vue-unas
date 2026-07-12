@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AdminLayout, BackButton, toastService, InputError } from '@admin'
 import InputField from '@admin/components/ui/InputField.vue'
-import Checkbox from '@admin/components/ui/Checkbox.vue'
+import CheckboxField from '@admin/components/ui/CheckboxField.vue'
 import Card from '@admin/components/ui/Card.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
 import CardDescription from '@admin/components/ui/CardDescription.vue'
@@ -91,9 +91,8 @@ onMounted(() => {
             />
             <InputError :message="errors.warehouse_id" />
           </div>
-          <div class="flex items-center gap-2 pt-2">
-            <Checkbox id="enabled" v-model="form.enabled" />
-            <Label for="enabled">Aktív</Label>
+          <div class="pt-2">
+            <CheckboxField id="enabled" label="Aktív" v-model="form.enabled" />
           </div>
         </div>
       </CardContent>

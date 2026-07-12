@@ -9,7 +9,7 @@ import CardFooter from '@admin/components/ui/CardFooter.vue'
 import CardHeader from '@admin/components/ui/CardHeader.vue'
 import CardTitle from '@admin/components/ui/CardTitle.vue'
 import Select from '@admin/components/ui/Select.vue'
-import Checkbox from '@admin/components/ui/Checkbox.vue'
+import CheckboxField from '@admin/components/ui/CheckboxField.vue'
 import { FormButtons } from '@admin'
 import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted, computed } from 'vue'
@@ -136,9 +136,8 @@ onMounted(() => {
 
           <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" :errors="errors.remote_id" />
 
-          <div class="flex items-center space-x-2 pt-8">
-            <Checkbox id="changed" v-model="form.changed" />
-            <Label for="changed">Módosult (szinkronizálandó)</Label>
+          <div class="pt-8">
+            <CheckboxField id="changed" label="Módosult (szinkronizálandó)" v-model="form.changed" />
           </div>
         </div>
       </CardContent>
