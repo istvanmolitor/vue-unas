@@ -2,7 +2,6 @@
 import { AdminLayout, BackButton, toastService, InputError, LoadingSpinner } from '@admin'
 import InputField from '@admin/components/ui/InputField.vue'
 import Label from '@admin/components/ui/Label.vue'
-import Input from '@admin/components/ui/Input.vue'
 import Textarea from '@admin/components/ui/Textarea.vue'
 import Card from '@admin/components/ui/Card.vue'
 import CardContent from '@admin/components/ui/CardContent.vue'
@@ -233,19 +232,13 @@ onMounted(async () => {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputField id="sku" label="SKU" v-model="form.sku" :required="true" :errors="errors.sku" />
 
-            <div class="space-y-2">
-              <Label for="unas_shop_id">Bolt *</Label>
-              <Input id="unas_shop_id" :model-value="form.shop_name" disabled />
-            </div>
+            <InputField id="unas_shop_id" label="Bolt *" :model-value="form.shop_name" disabled />
 
             <InputField id="price" label="Ár" v-model.number="form.price" :type="'number'" :required="true" :errors="errors.price" />
 
             <InputField id="stock" label="Készlet" v-model.number="form.stock" :type="'number'" :required="true" :errors="errors.stock" />
 
-            <div class="space-y-2">
-              <Label for="remote_id">Remote ID (opcionális)</Label>
-              <Input id="remote_id" v-model="form.remote_id" disabled />
-            </div>
+            <InputField id="remote_id" label="Remote ID (opcionális)" v-model="form.remote_id" disabled />
 
             <div class="space-y-2">
               <Label for="product_id">Kapcsolt termék (opcionális)</Label>
@@ -287,11 +280,12 @@ onMounted(async () => {
               :fields="['name', 'description']"
             >
               <div class="space-y-4">
-                <div class="space-y-2">
-                  <Label :for="`translation-name-${language.id}`">Név</Label>
-                  <Input :id="`translation-name-${language.id}`" v-model="translation.name" />
-                  <InputError :message="errors[`translations.${language.id}.name`]" />
-                </div>
+                <InputField
+                  :id="`translation-name-${language.id}`"
+                  label="Név"
+                  v-model="translation.name"
+                  :errors="errors[`translations.${language.id}.name`]"
+                />
 
                 <div class="space-y-2">
                   <Label :for="`translation-description-${language.id}`">Leírás</Label>
