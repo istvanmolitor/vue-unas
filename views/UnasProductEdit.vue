@@ -280,29 +280,27 @@ onMounted(async () => {
               <InputError :message="errors.unas_product_category_ids" />
             </div>
 
-            <div class="space-y-4 md:col-span-2 border-t pt-4">
-              <h3 class="text-lg font-medium">Fordítások</h3>
-              <TranslationRepeater
-                v-model="form.translations"
-                :fields="['name', 'description']"
-              >
-                <template #default="{ language, translation }">
-                  <div class="space-y-4">
-                    <div class="space-y-2">
-                      <Label :for="`translation-name-${language.id}`">Név</Label>
-                      <Input :id="`translation-name-${language.id}`" v-model="translation.name" />
-                      <InputError :message="errors[`translations.${language.id}.name`]" />
-                    </div>
-
-                    <div class="space-y-2">
-                      <Label :for="`translation-description-${language.id}`">Leírás</Label>
-                      <Textarea :id="`translation-description-${language.id}`" v-model="translation.description" rows="4" />
-                      <InputError :message="errors[`translations.${language.id}.description`]" />
-                    </div>
+            <TranslationRepeater
+              class="md:col-span-2"
+              v-model="form.translations"
+              :fields="['name', 'description']"
+            >
+              <template #default="{ language, translation }">
+                <div class="space-y-4">
+                  <div class="space-y-2">
+                    <Label :for="`translation-name-${language.id}`">Név</Label>
+                    <Input :id="`translation-name-${language.id}`" v-model="translation.name" />
+                    <InputError :message="errors[`translations.${language.id}.name`]" />
                   </div>
-                </template>
-              </TranslationRepeater>
-            </div>
+
+                  <div class="space-y-2">
+                    <Label :for="`translation-description-${language.id}`">Leírás</Label>
+                    <Textarea :id="`translation-description-${language.id}`" v-model="translation.description" rows="4" />
+                    <InputError :message="errors[`translations.${language.id}.description`]" />
+                  </div>
+                </div>
+              </template>
+            </TranslationRepeater>
 
             <div class="flex items-center space-x-2 pt-8">
               <Checkbox id="changed" v-model="form.changed" />
